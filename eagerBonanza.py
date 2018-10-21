@@ -1,3 +1,5 @@
+import matgen as gen
+
 class Graph:
     def __init__(self, v):
         self.vertices = v
@@ -21,9 +23,10 @@ class Graph:
                     return True
             c += 1
 
-
-g = Graph(4)
-g.edges = [[0, 1, 1, 1], [1, 0, 1, 0], [1, 1, 0, 1], [1, 0, 1, 0]]
+v = 4
+e = 5
+g = Graph(v)
+g.edges = gen.randAdjMatrix(v, e)
 g.graph_colouring()
 for col in g.colours:
     print(col)

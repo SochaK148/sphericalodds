@@ -1,6 +1,6 @@
 import random as rng
 
-def genAdjMatrix(v, e):
+def randAdjMatrix(v, e):
   matrix = [0] * v
   for i in range(v):
     matrix[i] = [0] * v

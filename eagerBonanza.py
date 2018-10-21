@@ -26,7 +26,7 @@ class Graph:
 v = 4
 e = 5
 g = Graph(v)
-g.edges = gen.genAdjMatrix(v, e)
+g.edges = gen.randAdjMatrix(v, e)
 g.graph_colouring()
 for col in g.colours:
     print(col)

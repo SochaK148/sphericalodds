@@ -4,7 +4,7 @@ import matgen as gen
 class Graph:
     def __init__(self, v, edges):
         self.vertices = v
-        self.edges = [[0 for a in range(v)] for b in range(v)]
+        self.edges = [[0 for _ in range(v)] for _ in range(v)]
         self.colours = [0] * v
         for e in edges:
             self.add_edge(e)
@@ -33,10 +33,10 @@ class Graph:
             c += 1
 
 
-v = 4
-e = 5
-g = Graph(v)
-g.edges = gen.rand(v, e)
+v = 100
+e = 90
+g = Graph(v, gen.rand(v, e))
 g.graph_colouring()
-for col in g.colours:
-    print(col)
+#   for row in g.edges:
+#       print(row)
+print(max(g.colours))

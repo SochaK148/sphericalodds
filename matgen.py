@@ -19,5 +19,16 @@ def read(filename):
         temp = [line[:-1] for line in f]
         vertices = int(temp[0])
         for line in temp[1:]:
-            edges.append([int(x) for x in line.split(' ')])
+            edges.append([int(x)-1 for x in line.split(' ')])
         return [vertices, edges]
+
+
+def write(filename, vertices, edge_count):
+    f = open('a.txt', 'w')
+    f.write(str(vertices) + '\n')
+    edges = sorted([sorted([x+1, y+1]) for (x,y) in rand(vertices, edge_count)])
+    for [x, y] in edges:
+        f.write(str(x) + ' ' + str(y) + '\n')
+
+
+write('a.txt', 10, 10)

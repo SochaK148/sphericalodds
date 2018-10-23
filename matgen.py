@@ -29,6 +29,3 @@ def write(filename, vertices, edge_count):
     edges = sorted([sorted([x+1, y+1]) for (x,y) in rand(vertices, edge_count)])
     for [x, y] in edges:
         f.write(str(x) + ' ' + str(y) + '\n')
-
-
-write('a.txt', 10, 10)

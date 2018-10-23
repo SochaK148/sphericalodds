@@ -33,11 +33,3 @@ class Graph:
                     return True
             c += 1
 
-
-v = 5
-e = 5
-g = Graph(v, gen.rand(v, e))
-g.graph_colouring(range(10))
-for row in g.edges:
-    print(row)
-print(max(g.colours))

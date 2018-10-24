@@ -1,6 +1,3 @@
-import matgen as gen
-
-
 class Graph:
     def __init__(self, v, edges):
         self.vertices = v
@@ -9,18 +6,21 @@ class Graph:
         print(edges)
         for e in edges:
             self.add_edge(e)
+        # initializing the graph with given edges and vertices
 
     def add_edge(self, new):
         rx = int(new[0])
         ry = int(new[1])
         self.edges[rx][ry] = 1
         self.edges[ry][rx] = 1
+        # adding a given edge to the adjacency matrix
 
     def is_safe(self, v, colour):
         for i in range(self.vertices):
             if self.edges[v][i] == 1 and self.colours[i] == colour:
                 return False
         return True
+        # checking if vertex can be coloured with a given colour
 
     def graph_colouring(self, order, v=0):
         if v == self.vertices:
@@ -32,4 +32,4 @@ class Graph:
                 if self.graph_colouring(order, v+1):
                     return True
             c += 1
-
+        # greedy algorithm which colours according to given order

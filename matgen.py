@@ -11,6 +11,7 @@ def rand(v, e):
             ry = rng.randint(0, v-1)
         edges.append((rx, ry))
     return edges
+# random edge generation
 
 
 def read(filename):
@@ -21,11 +22,13 @@ def read(filename):
         for line in temp[1:]:
             edges.append([int(x)-1 for x in line.split(' ')])
         return [vertices, edges]
+# reading only works if the last line is empty, to-fix
 
 
 def write(filename, vertices, edge_count):
-    f = open('a.txt', 'w')
+    f = open(filename, 'w')
     f.write(str(vertices) + '\n')
     edges = sorted([sorted([x+1, y+1]) for (x,y) in rand(vertices, edge_count)])
     for [x, y] in edges:
         f.write(str(x) + ' ' + str(y) + '\n')
+# creating a random instance of GCP

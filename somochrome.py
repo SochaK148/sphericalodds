@@ -7,6 +7,7 @@ class Monster:
     def __init__(self, vertices):
         self.perm = list(range(vertices))
         random.shuffle(self.perm)
+        # a random permutation of vertices the greedy algorithm will use as its order of colouring
         self.fitness = -1
 
     def __str__(self):
@@ -15,7 +16,7 @@ class Monster:
 
 in_graph = None
 in_vert = None
-horde = 200
+horde = 20
 generations = 1000
 
 
@@ -26,12 +27,15 @@ def genetics():
         monsters = fitness(monsters)
         monsters = selection(monsters)
         monsters = crossover(monsters)
-        monsters = mutation(monsters)
-    print('Dawn of the Horde')
+        # monsters = mutation(monsters)
+        # mutation is obsolete
+    print('Dawn of the Horde. Result:', monsters[0].fitness)
+# wrapper
 
 
 def init_monsters(horde, in_vert):
     return [Monster(in_vert) for _ in range(horde)]
+# initializing our horde of monsters
 
 
 def fitness(monsters):
@@ -40,6 +44,7 @@ def fitness(monsters):
         in_graph.graph_colouring(monster.perm)
         monster.fitness = max(in_graph.colours)
     return monsters
+# fitness is simply the number we can color a graph in given order (less=better)
 
 
 def selection(monsters):
@@ -47,6 +52,7 @@ def selection(monsters):
     print('\n'.join(map(str, monsters)))
     monsters = monsters[:int(0.2 * len(monsters))]
     return monsters
+# selecting monsters with the best fitness
 
 
 def crossover(monsters):
@@ -58,6 +64,7 @@ def crossover(monsters):
         child2 = Monster(in_vert)
         child1.perm, child2.perm = [-1] * in_vert, [-1] * in_vert
         start, end = sorted([random.randrange(in_vert) for _ in range(2)])
+        # selecting two random elements in the parents' perm
         child1_inherited = []
         child2_inherited = []
         for i in range(start, end + 1):
@@ -65,6 +72,7 @@ def crossover(monsters):
             child2.perm[i] = parent2.perm[i]
             child1_inherited.append(parent1.perm[i])
             child2_inherited.append(parent2.perm[i])
+            # children inherit a random segment
         current_p1_position, current_p2_position = 0, 0
         fixed_pos = list(range(start, end + 1))
         i = 0
@@ -81,7 +89,8 @@ def crossover(monsters):
                     p2_trait = parent2.perm[current_p2_position]
                 child1.perm[i] = p2_trait
                 child1_inherited.append(p2_trait)
-
+            # completing the rest of alleles from the other parent
+            # the same for the other child/parent below
             test_c2 = child2.perm[i]
             if test_c2 == -1:
                 p1_trait = parent1.perm[current_p1_position]
@@ -96,8 +105,10 @@ def crossover(monsters):
         children.append(child2)
     monsters.extend(children)
     return monsters
+# ordered crossover
+# child inherits a random segment from one parent and the rest of alleles from the other
 
-
+"""
 def mutation(monsters):
     for monster in monsters:
         for _ in range(in_vert//2):
@@ -107,9 +118,11 @@ def mutation(monsters):
                     x, y = random.randint(0, in_vert-1), random.randint(0, in_vert-1)
                 monster.perm[x], monster.perm[y] = monster.perm[y], monster.perm[x]
     return monsters
+"""
+# useless code, mutation not necessary for ordered list permutations
 
 
 if __name__ == '__main__':
-    [in_vert, edges] = gen.read('a.txt')
+    [in_vert, edges] = gen.read('instance.txt')
     in_graph = Graph(in_vert, edges)
     genetics()

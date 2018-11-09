@@ -3,7 +3,6 @@ class Graph:
         self.vertices = v
         self.edges = [[0 for _ in range(v)] for _ in range(v)]
         self.colours = [0] * v
-        print(edges)
         for e in edges:
             self.add_edge(e)
         # initializing the graph with given edges and vertices

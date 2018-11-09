@@ -11,13 +11,13 @@ class Monster:
         self.fitness = -1
 
     def __str__(self):
-        return 'Permutation: ' + str(self.perm) + ' Fitness: ' + str(self.fitness)
+        return 'Fitness: ' + str(self.fitness)
 
 
 in_graph = None
 in_vert = None
 horde = 20
-generations = 1000
+generations = 100
 
 
 def genetics():
@@ -57,56 +57,19 @@ def selection(monsters):
 
 def crossover(monsters):
     children = []
-    for _ in range((horde-len(monsters))//2):
-        parent1 = random.choice(monsters)
-        parent2 = random.choice(monsters)
-        child1 = Monster(in_vert)
-        child2 = Monster(in_vert)
-        child1.perm, child2.perm = [-1] * in_vert, [-1] * in_vert
-        start, end = sorted([random.randrange(in_vert) for _ in range(2)])
-        # selecting two random elements in the parents' perm
-        child1_inherited = []
-        child2_inherited = []
-        for i in range(start, end + 1):
-            child1.perm[i] = parent1.perm[i]
-            child2.perm[i] = parent2.perm[i]
-            child1_inherited.append(parent1.perm[i])
-            child2_inherited.append(parent2.perm[i])
-            # children inherit a random segment
-        current_p1_position, current_p2_position = 0, 0
-        fixed_pos = list(range(start, end + 1))
-        i = 0
-        while i < in_vert:
-            if i in fixed_pos:
-                i += 1
-                continue
-
-            test_c1 = child1.perm[i]
-            if test_c1 == -1:
-                p2_trait = parent2.perm[current_p2_position]
-                while p2_trait in child1_inherited:
-                    current_p2_position += 1
-                    p2_trait = parent2.perm[current_p2_position]
-                child1.perm[i] = p2_trait
-                child1_inherited.append(p2_trait)
-            # completing the rest of alleles from the other parent
-            # the same for the other child/parent below
-            test_c2 = child2.perm[i]
-            if test_c2 == -1:
-                p1_trait = parent1.perm[current_p1_position]
-                while p1_trait in child2_inherited:
-                    current_p1_position += 1
-                    p1_trait = parent1.perm[current_p1_position]
-                child2.perm[i] = p1_trait
-                child2_inherited.append(p1_trait)
-
-            i += 1
-        children.append(child1)
-        children.append(child2)
-    monsters.extend(children)
-    return monsters
+    for _ in range(2*len(monsters)):
+        source, filler = random.choice(monsters), random.choice(monsters)
+        x = random.randrange(0, len(source.perm) - 1)
+        y = random.randrange(x, len(source.perm) - 1)
+        child1, child2 = Monster(len(source.perm)), Monster(len(source.perm))
+        child1.perm = list(filter(lambda n: n not in source.perm[x:y], filler.perm))
+        child1.perm = (child1.perm[:x] + source.perm[x:y] + child1.perm[x:])
+        child2.perm = list(filter(lambda n: n not in filler.perm[x:y], source.perm))
+        child2.perm = (child2.perm[:x] + filler.perm[x:y] + child2.perm[x:])
+        children.extend([child1, child2])
+    return monsters + children
 # ordered crossover
-# child inherits a random segment from one parent and the rest of alleles from the other
+
 
 """
 def mutation(monsters):
@@ -123,6 +86,10 @@ def mutation(monsters):
 
 
 if __name__ == '__main__':
-    [in_vert, edges] = gen.read('instance.txt')
+    saturation1 = 0.7
+    saturation2 = 0.3
+    # gen.write("instancja70.txt", in_vert, int(in_vert * (in_vert - 1) * saturation1 * 0.5))
+    # gen.write("instancja30.txt", in_vert, int(in_vert * (in_vert - 1) * saturation2 * 0.5))
+    [in_vert, edges] = gen.read("instancja70.txt")
     in_graph = Graph(in_vert, edges)
     genetics()

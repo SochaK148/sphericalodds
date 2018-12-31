@@ -11,7 +11,7 @@ class Monster:
         self.fitness = -1
 
     def __str__(self):
-        return 'Fitness: ' + str(self.fitness)
+        return 'Fitness: ' + str(self.fitness) + ' Perm: ' + str(self.perm)
 
 
 in_graph = None
@@ -22,12 +22,16 @@ generations = 100
 
 def genetics():
     monsters = init_monsters(horde, in_vert)
+    for i in range(horde//2):
+        monsters[i].perm = in_graph.sorted_by_degree()
+    for i in range(horde//2):
+        monsters[len(monsters)-1-i].perm = in_graph.dfs_verts
     for generation in range(generations):
         print('Generation:', str(generation))
         monsters = fitness(monsters)
         monsters = selection(monsters)
         monsters = crossover(monsters)
-        # monsters = mutation(monsters)
+        monsters = mutation(monsters)
         # mutation is obsolete
     print('Dawn of the Horde. Result:', monsters[0].fitness)
 # wrapper
@@ -57,7 +61,7 @@ def selection(monsters):
 
 def crossover(monsters):
     children = []
-    for _ in range(2*len(monsters)):
+    for _ in range((horde-len(monsters))//2):
         source, filler = random.choice(monsters), random.choice(monsters)
         x = random.randrange(0, len(source.perm) - 1)
         y = random.randrange(x, len(source.perm) - 1)
@@ -71,25 +75,21 @@ def crossover(monsters):
 # ordered crossover
 
 
-"""
 def mutation(monsters):
     for monster in monsters:
-        for _ in range(in_vert//2):
-            x, y = 0, 0
-            if random.uniform(0.0, 1.0) <= 0.1:
-                while x == y:
-                    x, y = random.randint(0, in_vert-1), random.randint(0, in_vert-1)
+        x, y = 0, 0
+        if random.uniform(0.0, 1.0) <= 0.5:
+            while x == y:
+                x, y = random.randint(0, in_vert-1), random.randint(0, in_vert-1)
                 monster.perm[x], monster.perm[y] = monster.perm[y], monster.perm[x]
     return monsters
-"""
-# useless code, mutation not necessary for ordered list permutations
 
 
 if __name__ == '__main__':
-    saturation1 = 0.7
-    saturation2 = 0.3
+    # saturation1 = 0.7
+    # saturation2 = 0.3
     # gen.write("instancja70.txt", in_vert, int(in_vert * (in_vert - 1) * saturation1 * 0.5))
     # gen.write("instancja30.txt", in_vert, int(in_vert * (in_vert - 1) * saturation2 * 0.5))
-    [in_vert, edges] = gen.read("instancja70.txt")
+    [in_vert, edges] = gen.read("queen6.txt")
     in_graph = Graph(in_vert, edges)
     genetics()

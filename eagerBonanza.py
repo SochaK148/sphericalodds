@@ -3,8 +3,11 @@ class Graph:
         self.vertices = v
         self.edges = [[0 for _ in range(v)] for _ in range(v)]
         self.colours = [0] * v
+        self.dfs_verts = []
+        self.visited = [0 for _ in range(v)]
         for e in edges:
             self.add_edge(e)
+        self.dfs(0)
         # initializing the graph with given edges and vertices
 
     def add_edge(self, new):
@@ -31,4 +34,24 @@ class Graph:
                 if self.graph_colouring(order, v+1):
                     return True
             c += 1
+
         # greedy algorithm which colours according to given order
+
+    def check_degree(self, vert):
+        degree = 0
+        for i in range(len(self.edges)):
+            degree += self.edges[i][vert]
+        return degree
+
+    def sorted_by_degree(self):
+        dict = {}
+        for vertice in range(self.vertices):
+            dict[vertice] = self.check_degree(vertice)
+        return sorted(dict, key=dict.get, reverse=True)
+
+    def dfs(self, i):
+        self.dfs_verts.append(i)
+        self.visited[i] = 1
+        for j in range(self.vertices):
+            if self.visited[j] == 0 and self.edges[i][j] == 1:
+                self.dfs(j)
